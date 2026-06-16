@@ -4,5 +4,5 @@ namespace OnibusExpress.Application.Features.Trips.GetTripDetails;
 
 public interface IGetTripDetailsUseCase
 {
-    Task<TripDetailsResponse> ExecuteAsync(GetTripDetailsRequest request, CancellationToken cancellationToken = default);
+    Task<TripDetailsResponse> ExecuteAsync(Guid tripId, CancellationToken cancellationToken = default);
 }

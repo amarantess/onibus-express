@@ -23,10 +23,14 @@ public sealed class TripRepository : ITripRepository
         var end = new DateTimeOffset(request.TravelDate.AddDays(1).ToDateTime(TimeOnly.MinValue, DateTimeKind.Utc), TimeSpan.Zero);
 
         return await _dbContext.Trips
-            .Where(trip => trip.Route!.Origin == request.Origin
+            .Where(trip => !trip.IsDeleted
+                && trip.Route != null
+                && !trip.Route.IsDeleted
+                && trip.Route.Origin == request.Origin
                 && trip.Route.Destination == request.Destination
                 && trip.DepartureAt >= start
                 && trip.DepartureAt < end)
+            .OrderBy(trip => trip.DepartureAt)
             .Select(trip => new TripSummaryResponse
             {
                 TripId = trip.Id,
@@ -44,7 +48,7 @@ public sealed class TripRepository : ITripRepository
     public async Task<TripDetailsResponse?> GetDetailsAsync(Guid tripId, CancellationToken cancellationToken = default)
     {
         var trip = await _dbContext.Trips
-            .Where(item => item.Id == tripId)
+            .Where(item => item.Id == tripId && !item.IsDeleted && item.Route != null && !item.Route.IsDeleted)
             .Select(item => new
             {
                 item.Id,
@@ -93,6 +97,6 @@ public sealed class TripRepository : ITripRepository
     {
         return await _dbContext.Trips
             .Include(trip => trip.Route)
-            .SingleOrDefaultAsync(cancellationToken);
+            .SingleOrDefaultAsync(trip => trip.Id == tripId && !trip.IsDeleted, cancellationToken);
     }
 }

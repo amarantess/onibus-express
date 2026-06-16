@@ -12,7 +12,6 @@ using OnibusExpress.Application.Features.Trips.SearchTrips;
 using OnibusExpress.Application.Services;
 using OnibusExpress.Domain.Features.Reservations.CreateReservation;
 using OnibusExpress.Domain.Features.Routes.ListRoutes;
-using OnibusExpress.Domain.Features.Trips.GetTripDetails;
 using OnibusExpress.Domain.Features.Trips.SearchTrips;
 
 namespace OnibusExpress.Application;
@@ -33,6 +32,9 @@ public static class DependencyInjectionExtensionApp
         services.AddScoped<ICreateReservationUseCase, CreateReservationUseCase>();
         services.AddScoped<IGetReservationByCodeUseCase, GetReservationByCodeUseCase>();
         services.AddScoped<ICancelReservationUseCase, CancelReservationUseCase>();
+        services.AddScoped<IListRoutesUseCase, ListRoutesUseCase>();
+        services.AddScoped<ISearchTripsUseCase, SearchTripsUseCase>();
+        services.AddScoped<IGetTripDetailsUseCase, GetTripDetailsUseCase>();
     }
 
     private static void AddServices(this IServiceCollection services)
@@ -47,6 +49,5 @@ public static class DependencyInjectionExtensionApp
         services.AddScoped<IValidator<CreateReservationRequest>, CreateReservationRequestValidator>();
         services.AddScoped<IValidator<ListRoutesRequest>, ListRoutesRequestValidator>();
         services.AddScoped<IValidator<SearchTripsRequest>, SearchTripsRequestValidator>();
-        services.AddScoped<IValidator<GetTripDetailsRequest>, GetTripDetailsRequestValidator>();
     }
 }

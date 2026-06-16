@@ -32,6 +32,7 @@ public static class DependencyInjectionExtensionInfra
         services.AddScoped<IPassengerRepository, PassengerRepository>();
         services.AddScoped<IReservationRepository, ReservationRepository>();
         services.AddScoped<ITripRepository, TripRepository>();
+        services.AddScoped<IRouteRepository, RouteRepository>();
     }
 
     private static void AddUnitOfWork(this IServiceCollection services)
