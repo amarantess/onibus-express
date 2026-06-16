@@ -11,12 +11,6 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseAuthorization();
-app.MapGet("/", () => Results.Ok(new
-{
-    Service = "OnibusExpress.Api",
-    Status = "Healthy",
-    UtcNow = DateTime.UtcNow
-}));
 app.MapControllers();
 
 app.Run();
