@@ -3,14 +3,18 @@ using OnibusExpress.Domain.Entities;
 
 namespace OnibusExpress.Infrastructure.DataAccess;
 
-public sealed class OnibusExpressDbContext(DbContextOptions<OnibusExpressDbContext> options) : DbContext(options)
+public sealed class OnibusExpressDbContext : DbContext
 {
-    public DbSet<Route> Routes { get; set; }
-    public DbSet<Trip> Trips { get; set; }
-	public DbSet<Passenger> Passengers { get; set; }
-	public DbSet<Reservation> Reservations { get; set; }
+    public OnibusExpressDbContext(DbContextOptions<OnibusExpressDbContext> options) : base(options)
+    {
+    }
 
-	protected override void OnModelCreating(ModelBuilder modelBuilder)
+    public DbSet<Route> Routes { get; set; } = null!;
+    public DbSet<Trip> Trips { get; set; } = null!;
+    public DbSet<Passenger> Passengers { get; set; } = null!;
+    public DbSet<Reservation> Reservations { get; set; } = null!;
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(OnibusExpressDbContext).Assembly);
     }

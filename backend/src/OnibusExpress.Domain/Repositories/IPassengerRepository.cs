@@ -1,9 +1,10 @@
-using OnibusExpress.Domain.Features.Reservations.Shared;
+using OnibusExpress.Domain.Entities;
 
 namespace OnibusExpress.Domain.Repositories;
 
 public interface IPassengerRepository
 {
-    Task<PassengerRecordDto?> GetByCpfAsync(string cpf, CancellationToken cancellationToken = default);
-    Task<PassengerRecordDto> UpsertAsync(PassengerUpsertDto passenger, CancellationToken cancellationToken = default);
+    Task<Passenger?> GetByCpfAsync(string cpf, CancellationToken cancellationToken = default);
+    Task CreateAsync(Passenger passenger, CancellationToken cancellationToken = default);
+    void Update(Passenger passenger);
 }

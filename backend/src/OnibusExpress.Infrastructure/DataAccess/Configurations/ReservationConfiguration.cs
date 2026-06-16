@@ -39,6 +39,7 @@ internal sealed class ReservationConfiguration : IEntityTypeConfiguration<Reserv
             .IsUnique();
 
         builder.HasIndex(reservation => new { reservation.TripId, reservation.SeatNumber })
-            .IsUnique();
+            .IsUnique()
+            .HasFilter("[IsDeleted] = 0");
     }
 }
