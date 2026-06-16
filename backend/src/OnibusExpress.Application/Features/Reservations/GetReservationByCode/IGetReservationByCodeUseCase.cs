@@ -4,5 +4,5 @@ namespace OnibusExpress.Application.Features.Reservations.GetReservationByCode;
 
 public interface IGetReservationByCodeUseCase
 {
-    Task<GetReservationByCodeResponse> ExecuteAsync(GetReservationByCodeRequest request, CancellationToken cancellationToken = default);
+    Task<GetReservationByCodeResponse> ExecuteAsync(string code, CancellationToken cancellationToken = default);
 }
