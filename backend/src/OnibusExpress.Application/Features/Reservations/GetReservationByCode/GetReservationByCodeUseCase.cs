@@ -1,5 +1,6 @@
 using OnibusExpress.Domain.Features.Reservations.GetReservationByCode;
 using OnibusExpress.Domain.Repositories;
+using OnibusExpress.Infrastructure.Exceptions.ExceptionsBase;
 
 namespace OnibusExpress.Application.Features.Reservations.GetReservationByCode;
 
@@ -15,11 +16,11 @@ public sealed class GetReservationByCodeUseCase : IGetReservationByCodeUseCase
     public async Task<GetReservationByCodeResponse> ExecuteAsync(string code, CancellationToken cancellationToken = default)
     {
         if (string.IsNullOrWhiteSpace(code) || code.Length > 16)
-			throw new Exception("Reservation code is invalid.");
+			throw new ErrorOnValidationException("Reservation code is invalid.");
 
 		var reservation = await _reservationRepository.GetDetailsByCodeAsync(code, cancellationToken);
         if (reservation is null)
-			throw new Exception("Reservation was not found.");
+			throw new NotFoundException("Reservation was not found.");
 
 		return new GetReservationByCodeResponse
         {

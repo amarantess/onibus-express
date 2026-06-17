@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using OnibusExpress.Api.Responses;
 using OnibusExpress.Application.Features.Reservations.CancelReservation;
 using OnibusExpress.Application.Features.Reservations.CreateReservation;
 using OnibusExpress.Application.Features.Reservations.GetReservationByCode;
@@ -28,9 +29,9 @@ public class ReservationsController : ControllerBase
 
     [HttpPost]
     [ProducesResponseType<CreateReservationResponse>(StatusCodes.Status201Created)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
-    [ProducesResponseType(StatusCodes.Status409Conflict)]
+    [ProducesResponseType<ResponseError>(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType<ResponseError>(StatusCodes.Status404NotFound)]
+    [ProducesResponseType<ResponseError>(StatusCodes.Status409Conflict)]
     public async Task<IActionResult> CreateReservation([FromBody] CreateReservationRequest request, CancellationToken cancellationToken)
     {
         var response = await _createReservationUseCase.ExecuteAsync(request, cancellationToken);
@@ -39,8 +40,8 @@ public class ReservationsController : ControllerBase
 
     [HttpGet("{code}")]
     [ProducesResponseType<GetReservationByCodeResponse>(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType<ResponseError>(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType<ResponseError>(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> GetReservationByCode([FromRoute] string code, CancellationToken cancellationToken)
     {
         var response = await _getReservationByCodeUseCase.ExecuteAsync(code, cancellationToken);
@@ -49,9 +50,9 @@ public class ReservationsController : ControllerBase
 
     [HttpDelete("{code}")]
     [ProducesResponseType<CancelReservationResponse>(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
-    [ProducesResponseType(StatusCodes.Status409Conflict)]
+    [ProducesResponseType<ResponseError>(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType<ResponseError>(StatusCodes.Status404NotFound)]
+    [ProducesResponseType<ResponseError>(StatusCodes.Status409Conflict)]
     public async Task<IActionResult> CancelReservation([FromRoute] string code, CancellationToken cancellationToken)
     {
         var response = await _cancelReservationUseCase.ExecuteAsync(code, cancellationToken);

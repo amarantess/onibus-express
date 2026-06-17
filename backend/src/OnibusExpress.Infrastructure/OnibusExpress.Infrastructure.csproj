@@ -1,7 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
-    <ProjectReference Include="..\OnibusExpress.Application\OnibusExpress.Application.csproj" />
     <ProjectReference Include="..\OnibusExpress.Domain\OnibusExpress.Domain.csproj" />
   </ItemGroup>
 

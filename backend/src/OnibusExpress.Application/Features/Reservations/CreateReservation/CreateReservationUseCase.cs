@@ -6,6 +6,7 @@ using OnibusExpress.Domain.Entities;
 using OnibusExpress.Domain.Enums;
 using OnibusExpress.Domain.Features.Reservations.CreateReservation;
 using OnibusExpress.Domain.Repositories;
+using OnibusExpress.Infrastructure.Exceptions.ExceptionsBase;
 
 namespace OnibusExpress.Application.Features.Reservations.CreateReservation;
 
@@ -47,17 +48,17 @@ public sealed class CreateReservationUseCase : ICreateReservationUseCase
         var normalizedCpf = request.Cpf.NormalizeCpf();
 
         if (!_cpfValidator.IsValid(normalizedCpf))
-			throw new Exception("CPF is invalid.");
+			throw new ErrorOnValidationException("CPF is invalid.");
 
 		var trip = await _tripRepository.GetByIdAsync(request.TripId, cancellationToken);
         if (trip is null)
-			throw new Exception("Trip was not found.");
+			throw new NotFoundException("Trip was not found.");
 
 		if (trip.DepartureAt <= _dateTimeProvider.UtcNow)
-			throw new Exception("Cannot create a reservation for a trip that has already departed.");
+			throw new ConflictException("Cannot create a reservation for a trip that has already departed.");
 
 		if (await _reservationRepository.SeatIsOccupiedAsync(request.TripId, request.SeatNumber, cancellationToken))
-			throw new Exception("The selected seat is already occupied.");
+			throw new ConflictException("The selected seat is already occupied.");
 
 		var passenger = await _passengerRepository.GetByCpfAsync(normalizedCpf, cancellationToken);
         if (passenger is null)

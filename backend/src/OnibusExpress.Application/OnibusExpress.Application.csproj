@@ -6,6 +6,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\OnibusExpress.Infrastructure\OnibusExpress.Infrastructure.csproj" />
     <ProjectReference Include="..\OnibusExpress.Domain\OnibusExpress.Domain.csproj" />
   </ItemGroup>
 

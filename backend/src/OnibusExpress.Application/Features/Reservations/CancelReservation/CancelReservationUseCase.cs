@@ -2,6 +2,7 @@ using OnibusExpress.Application.Abstractions;
 using OnibusExpress.Domain.Enums;
 using OnibusExpress.Domain.Features.Reservations.CancelReservation;
 using OnibusExpress.Domain.Repositories;
+using OnibusExpress.Infrastructure.Exceptions.ExceptionsBase;
 
 namespace OnibusExpress.Application.Features.Reservations.CancelReservation;
 
@@ -24,24 +25,24 @@ public sealed class CancelReservationUseCase : ICancelReservationUseCase
     public async Task<CancelReservationResponse> ExecuteAsync(string code, CancellationToken cancellationToken = default)
     {
         if (string.IsNullOrWhiteSpace(code))
-            throw new Exception("Reservation code is required.");
+            throw new ErrorOnValidationException("Reservation code is required.");
 
         if (code.Length > 16)
-            throw new Exception("Reservation code must have at most 16 characters.");
+            throw new ErrorOnValidationException("Reservation code must have at most 16 characters.");
 
         var reservation = await _reservationRepository.GetByCodeAsync(code, cancellationToken);
         if (reservation is null)
-			throw new Exception("Reservation was not found.");
+			throw new NotFoundException("Reservation was not found.");
 
 		if (reservation.Status == ReservationStatus.Cancelled || reservation.IsDeleted)
-			throw new Exception("Reservation is already cancelled.");
+			throw new ConflictException("Reservation is already cancelled.");
 
 		var reservationDetails = await _reservationRepository.GetDetailsByCodeAsync(code, cancellationToken);
         if (reservationDetails is null)
-			throw new Exception("Reservation was not found.");
+			throw new NotFoundException("Reservation was not found.");
 
 		if (reservationDetails.DepartureAt - _dateTimeProvider.UtcNow < TimeSpan.FromHours(2))
-			throw new Exception("Cancellation is only allowed up to 2 hours before departure.");
+			throw new ConflictException("Cancellation is only allowed up to 2 hours before departure.");
 
 		var cancelledAt = _dateTimeProvider.UtcNow;
 

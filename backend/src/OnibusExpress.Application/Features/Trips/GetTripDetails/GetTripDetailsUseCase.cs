@@ -1,5 +1,6 @@
 using OnibusExpress.Domain.Features.Trips.GetTripDetails;
 using OnibusExpress.Domain.Repositories;
+using OnibusExpress.Infrastructure.Exceptions.ExceptionsBase;
 
 namespace OnibusExpress.Application.Features.Trips.GetTripDetails;
 
@@ -15,11 +16,11 @@ public sealed class GetTripDetailsUseCase : IGetTripDetailsUseCase
     public async Task<TripDetailsResponse> ExecuteAsync(Guid tripId, CancellationToken cancellationToken = default)
     {
         if (tripId == Guid.Empty)
-			throw new Exception("Trip id is invalid.");
+			throw new ErrorOnValidationException("Trip id is invalid.");
 
         var tripDetails = await _tripRepository.GetDetailsAsync(tripId, cancellationToken);
         if (tripDetails is null)
-			throw new Exception("Trip was not found.");
+			throw new NotFoundException("Trip was not found.");
 
 		return tripDetails;
     }
