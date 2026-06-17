@@ -1,11 +1,21 @@
 using OnibusExpress.Application;
+using OnibusExpress.Api.Middleware;
 using OnibusExpress.Infrastructure;
 using OnibusExpress.Infrastructure.DataAccess.Seed;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
-builder.Services.AddOpenApi();
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen(options =>
+{
+    options.SwaggerDoc("v1", new()
+    {
+        Title = "OnibusExpress API",
+        Version = "v1",
+        Description = "API for the OnibusExpress bus ticket reservation challenge."
+    });
+});
 builder.Services.AddApplication();
 builder.Services.AddInfrastructure(builder.Configuration);
 
@@ -22,9 +32,15 @@ if (!string.IsNullOrWhiteSpace(connectionString) && !connectionString.Contains("
 
 if (app.Environment.IsDevelopment())
 {
-    app.MapOpenApi();
+    app.UseSwagger();
+    app.UseSwaggerUI(options =>
+    {
+        options.SwaggerEndpoint("/swagger/v1/swagger.json", "OnibusExpress API v1");
+        options.RoutePrefix = "swagger";
+    });
 }
 
+app.UseMiddleware<ExceptionHandlingMiddleware>();
 app.UseAuthorization();
 app.MapControllers();
 

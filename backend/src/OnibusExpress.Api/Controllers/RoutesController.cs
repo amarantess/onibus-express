@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using OnibusExpress.Api.Responses;
 using OnibusExpress.Application.Features.Routes.ListRoutes;
 using OnibusExpress.Domain.Features.Routes.ListRoutes;
 
@@ -17,6 +18,7 @@ public class RoutesController : ControllerBase
 
     [HttpGet]
     [ProducesResponseType<ListRoutesResponse>(StatusCodes.Status200OK)]
+    [ProducesResponseType<ResponseError>(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> ListRoutes(CancellationToken cancellationToken)
     {
         var response = await _listRoutesUseCase.ExecuteAsync(new ListRoutesRequest(), cancellationToken);
