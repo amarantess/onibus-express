@@ -23,8 +23,6 @@ public sealed class OnibusExpressDbSeeder
 
     public async Task SeedAsync(CancellationToken cancellationToken = default)
     {
-        await _dbContext.Database.EnsureCreatedAsync(cancellationToken);
-
         if (await _dbContext.Routes.AnyAsync(cancellationToken) || await _dbContext.Trips.AnyAsync(cancellationToken))
         {
             return;

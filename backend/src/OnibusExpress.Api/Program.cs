@@ -1,9 +1,10 @@
 using OnibusExpress.Application;
 using OnibusExpress.Api.Middleware;
 using OnibusExpress.Infrastructure;
-using OnibusExpress.Infrastructure.DataAccess.Seed;
+using OnibusExpress.Infrastructure.DataAccess;
 
 var builder = WebApplication.CreateBuilder(args);
+_ = ConnectionStringResolver.GetRequiredDefaultConnectionString(builder.Configuration);
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
@@ -21,14 +22,7 @@ builder.Services.AddInfrastructure(builder.Configuration);
 
 var app = builder.Build();
 
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-
-if (!string.IsNullOrWhiteSpace(connectionString) && !connectionString.Contains("<"))
-{
-    using var scope = app.Services.CreateScope();
-    var seeder = scope.ServiceProvider.GetRequiredService<OnibusExpressDbSeeder>();
-    await seeder.SeedAsync();
-}
+await app.Services.InitializeDatabaseAsync();
 
 if (app.Environment.IsDevelopment())
 {

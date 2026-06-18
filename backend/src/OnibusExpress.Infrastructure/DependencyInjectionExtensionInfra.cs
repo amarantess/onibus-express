@@ -24,7 +24,9 @@ public static class DependencyInjectionExtensionInfra
     private static void AddDatabase(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddDbContext<OnibusExpressDbContext>(options =>
-            options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
+            options.UseSqlServer(
+                configuration.GetConnectionString("DefaultConnection"),
+                sqlServerOptions => sqlServerOptions.MigrationsAssembly(typeof(DataAccess.OnibusExpressDbContext).Assembly.FullName)));
     }
 
     private static void AddRepositories(this IServiceCollection services)
