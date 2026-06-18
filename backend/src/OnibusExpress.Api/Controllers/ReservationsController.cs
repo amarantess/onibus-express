@@ -35,7 +35,7 @@ public class ReservationsController : ControllerBase
     public async Task<IActionResult> CreateReservation([FromBody] CreateReservationRequest request, CancellationToken cancellationToken)
     {
         var response = await _createReservationUseCase.ExecuteAsync(request, cancellationToken);
-        return CreatedAtAction(nameof(GetReservationByCode), new { codigo = response.Code }, response);
+        return CreatedAtAction(nameof(GetReservationByCode), new { code = response.Code }, response);
     }
 
     [HttpGet("{code}")]
