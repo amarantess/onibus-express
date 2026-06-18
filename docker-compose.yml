@@ -1,0 +1,36 @@
+services:
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: onibus-express-sqlserver
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_PID: "Developer"
+      MSSQL_SA_PASSWORD: "OnibusExpress@123"
+    ports:
+      - "1433:1433"
+    volumes:
+      - onibus-express-sql-data:/var/opt/mssql
+    healthcheck:
+      test: ["CMD-SHELL", "/opt/mssql-tools18/bin/sqlcmd -C -S localhost -U sa -P \"$${MSSQL_SA_PASSWORD}\" -Q \"SELECT 1\" || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 25s
+
+  api:
+    container_name: onibus-express-api
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    depends_on:
+      sqlserver:
+        condition: service_healthy
+    environment:
+      ASPNETCORE_ENVIRONMENT: "Development"
+      ConnectionStrings__DefaultConnection: "Server=sqlserver,1433;Database=OnibusExpressDb;User ID=sa;Password=OnibusExpress@123;TrustServerCertificate=True;Encrypt=False;"
+    ports:
+      - "8080:8080"
+    restart: unless-stopped
+
+volumes:
+  onibus-express-sql-data:
